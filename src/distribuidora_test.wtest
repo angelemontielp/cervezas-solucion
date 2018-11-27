@@ -1,0 +1,86 @@
+import distribuidora.*
+import cerveza.*
+
+test "pedido de 3 lotes Porter proveedor a menos de 10km, aplica 10% descuento" {
+
+	var losTresBirreros = new Distribuidora(minimoParaDescuento=3)
+	var porter = new LotePorter(lupulo=lupuloImportado, levadura=new Levadura(), distanciaProveedor=9)
+	var pedido = new Pedido(distribuidora=losTresBirreros, cantidad=4, tipoLote=porter)
+
+	assert.equals(0.1, pedido.descuento())
+}
+
+test "pedido de 8 lotes Lager con 3 ingredientes, 6% descuento" {
+
+	var moe = new Distribuidora(minimoParaDescuento=7)
+	var lager = new LoteLager(lupulo=lupuloImportado, levadura=new Levadura(), cantIngredientes=3)
+	var pedido = new Pedido(distribuidora=moe, cantidad=8, tipoLote=lager)
+
+	assert.equals(0.06, pedido.descuento())
+}
+
+test "pedido de 8 lotes Lager con 6 ingredientes, 20% descuento" {
+
+	var moe = new Distribuidora(minimoParaDescuento=7)
+	var lager = new LoteLager(lupulo=lupuloImportado, levadura=new Levadura(), cantIngredientes=6)
+	var pedido = new Pedido(distribuidora=moe, cantidad=8, tipoLote=lager)
+
+	assert.equals(0.2, pedido.descuento())
+
+}
+
+test "costo de pedidos, total distribuidora" {
+
+	var moe = new Distribuidora(minimoParaDescuento=7)
+	var lager = new LoteLager(lupulo=lupuloImportado, levadura=new Levadura(), cantIngredientes=6)
+	var porter = new LotePorter(lupulo=lupuloImportado, levadura=new Levadura(alta=true), distanciaProveedor=20)
+	var pedido = new Pedido(distribuidora=moe, cantidad=7, tipoLote=lager)
+	var pedido2 = new Pedido(distribuidora=moe, cantidad=6, tipoLote=porter)
+	
+	
+	moe.agregarPedido(pedido)
+	moe.agregarPedido(pedido2)
+	assert.equals(7280, pedido.costo())
+	assert.equals(9240, pedido2.costo())
+	assert.equals(16520, moe.totalFacturado())
+
+}
+
+test "cantidad de pedidos de una cerveza dada" {
+
+	var moe = new Distribuidora(minimoParaDescuento=7)
+
+	var lager = new LoteLager(lupulo=lupuloImportado, levadura=new Levadura(), cantIngredientes=6)
+	var porter = new LotePorter(lupulo=lupuloImportado, levadura=new Levadura(alta=true), distanciaProveedor=20)
+
+	var lager1 = new Pedido(distribuidora=moe, cantidad=7, tipoLote=lager)
+	var lager2 = new Pedido(distribuidora=moe, cantidad=7, tipoLote=lager)
+
+	var porter1 = new Pedido(distribuidora=moe, cantidad=6, tipoLote=porter)
+	var porter2 = new Pedido(distribuidora=moe, cantidad=6, tipoLote=porter)
+	var porter3 = new Pedido(distribuidora=moe, cantidad=6, tipoLote=porter)
+	
+	moe.agregarPedido(lager1)
+	moe.agregarPedido(lager2)
+	moe.agregarPedido(porter1)
+	moe.agregarPedido(porter2)
+	moe.agregarPedido(porter3)
+	
+	assert.equals(2, moe.cantPedidos("lager"))
+	assert.equals(3, moe.cantPedidos("porter"))
+
+}
+
+test "pedido mas caro distribuidora" {
+
+	var moe = new Distribuidora(minimoParaDescuento=7)
+	var lager = new LoteLager(lupulo=lupuloImportado, levadura=new Levadura(), cantIngredientes=6)
+	var porter = new LotePorter(lupulo=lupuloImportado, levadura=new Levadura(alta=true), distanciaProveedor=20)
+	var pedido = new Pedido(distribuidora=moe, cantidad=7, tipoLote=lager)
+	var pedido2 = new Pedido(distribuidora=moe, cantidad=6, tipoLote=porter)
+	
+	moe.agregarPedido(pedido)
+	moe.agregarPedido(pedido2)
+
+	assert.equals(pedido2, moe.pedidoMasCaro())
+}

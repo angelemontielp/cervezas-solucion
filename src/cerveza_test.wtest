@@ -1,0 +1,56 @@
+import cerveza.*
+
+describe "" {
+
+	var fermAlta
+	var fermBaja
+
+	fixture {
+		fermAlta = new Levadura(alta = true)
+		fermBaja = new Levadura(alta = false)
+	}
+
+	test "costo de una clásica con lúpulo importado y baja fermentacion" {
+		var clasica = new LoteClasica(lupulo = lupuloImportado, levadura = fermBaja)
+		assert.equals(clasica.costo(), 1000)
+	}
+
+	test "costo de una clásica con lúpulo importado y alta fermentacion" {
+		var clasica = new LoteClasica(lupulo = lupuloImportado, levadura = fermAlta)
+		assert.equals(clasica.costo(), 1100)
+	}
+
+	test "costo de una clásica con lúpulo local y alta fermentacion" {
+		var clasica = new LoteClasica(lupulo = lupuloLocal, levadura = fermAlta)
+		assert.equals(clasica.costo(), 880)
+	}
+
+	test "costo de una lager con lúpulo local y baja fermentacion sin ingredientes" {
+		var lager = new LoteLager(lupulo = lupuloLocal, levadura = fermBaja)
+		assert.equals(lager.costo(), 800)
+	}
+
+	test "costo de una lager con lúpulo importado y sin ingredientes" {
+		var lev = new Levadura(alta = false)
+		var lager = new LoteLager(lupulo = lupuloImportado, levadura = lev)
+		lager.agregarIngrediente()
+		lager.agregarIngrediente()
+		lager.agregarIngrediente()
+		assert.equals(lager.costo(), 1150)
+	}
+
+	test "costo de una lager con lúpulo importado y alta fermentacion con 2 ingredientes" {
+		var lev = new Levadura(alta = true)
+		var lager = new LoteLager(lupulo = lupuloImportado, levadura = lev)
+		lager.agregarIngrediente()
+		lager.agregarIngrediente()
+		assert.equals(lager.costo(), 1200)
+	}
+
+	test "costo de una porter con lúpulo importado y proveedor a 20kms" {
+		var porter = new LotePorter(lupulo = lupuloImportado, levadura = fermBaja, distanciaProveedor = 20)
+		assert.equals(porter.costo(), 1400)
+	}
+
+}
+
