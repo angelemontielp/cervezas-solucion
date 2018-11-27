@@ -1,14 +1,15 @@
 object lupuloImportado {
 
 	const constIbu = 2.4
-	
+
 	method costo() {
 		return 1000
 	}
 
-	method constIbu(){
+	method constIbu() {
 		return constIbu
 	}
+
 }
 
 object lupuloLocal {
@@ -25,32 +26,15 @@ object lupuloLocal {
 
 class Levadura {
 
-	method incremento()
-	
-	method cepa(){
-		return "algo"
-	}
+	const property alta = false
 
-}
-
-class FermAlta inherits Levadura {
-
-	override method incremento() {
-		return 1.1
-	}
-
-}
-
-class FermBaja inherits Levadura {
-
-	override method incremento() {
-		return 1
+	method incremento() {
+		if (alta) return 1.1 else return 1
 	}
 
 }
 
 class FermMedia inherits Levadura {
-
 
 }
 
@@ -67,7 +51,6 @@ class LoteClasica {
 //	method costo() {
 //		return self.costoBase()
 //	}
-
 	method ibus() {
 		return (lupulo.constIbu() * azucar) / 2
 	}
